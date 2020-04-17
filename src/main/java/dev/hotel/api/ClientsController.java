@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,11 +62,10 @@ public class ClientsController {
 
 	// POST : clients/ ------ creation d'un client
 	@PostMapping
-	public ResponseEntity<Object> clients(@RequestParam String nom, @RequestParam String prenoms) {
-		if (nom.length() < 2 || prenoms.length() < 2) {
+	public ResponseEntity<Object> clients(@RequestBody Client client) {
+		if (client.getNom().length() < 2 || client.getPrenoms().length() < 2) {
 			return ResponseEntity.status(400).body("Erreur : nom et prenoms doivent avoir au moins deux caracteres");
 		} else {
-			Client client = new Client(nom, prenoms);
 			clientRepository.save(client);
 			return ResponseEntity.status(200).body(client);
 		}

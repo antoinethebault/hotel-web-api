@@ -18,9 +18,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.google.gson.Gson;
 
 import dev.hotel.entite.Client;
 import dev.hotel.repository.ClientRepository;
@@ -95,9 +98,12 @@ class ClientsControllerTest {
 	void testCreerClientValide() throws Exception {
 		when(clientRepository.save(any(Client.class))).thenReturn(null);
 		LOGGER.info("Etant donne que l'on cree un client qui a des elements de plus de deux caracteres");
+		Gson gson = new Gson();
+		String json = gson.toJson(new Client("Robert", "Christian"));
+
 		LOGGER.info("Lorsque l'on envoie le client au format via la methode post");
 		LOGGER.info("Alors le retour doit renvoye le client avec un code 200 et les valeurs du client envoye");
-		mockMvc.perform(post("/clients").param("nom", "Robert").param("prenoms", "Christian"))
+		mockMvc.perform(post("/clients/").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").isNotEmpty())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("Robert"));
