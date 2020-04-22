@@ -109,4 +109,18 @@ class ClientsControllerTest {
 				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("Robert"));
 	}
 
+	// test la recherche par nom
+	@Test
+	void testRechercheClientNom() throws Exception {
+		LOGGER.info("Etant donne que l'on a un client dont le nom est Odd");
+		Optional<Client> client = Optional.of(new Client("Odd", "Ross"));
+		when(clientRepository.findByNom("Odd")).thenReturn(client);
+
+		LOGGER.info("Lorsque l'on fait une recherche par nom : Odd");
+		LOGGER.info("Alors on doit retrouve le nom Odd et le prenom Ross en reponse");
+		mockMvc.perform(MockMvcRequestBuilders.get("/clients/client?nom=Odd"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").value("Ross"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("Odd"));
+	}
+
 }

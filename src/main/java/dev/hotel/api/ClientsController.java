@@ -40,8 +40,22 @@ public class ClientsController {
 		} else {
 			clients = clientRepository.findAll();
 		}
-
 		return clients;
+	}
+
+	// GET : clients?nom=x
+	@GetMapping
+	@RequestMapping(value = "/client")
+	public ResponseEntity<Object> client(@RequestParam Optional<String> nom) {
+		if (nom.isPresent()) {
+			Optional<Client> client = clientRepository.findByNom(nom.get());
+			if (client.isPresent())
+				return ResponseEntity.status(200).body(client.get());
+			else
+				return ResponseEntity.status(404).body("Erreur : le nom n'a pas ete trouve");
+		} else {
+			return ResponseEntity.status(400).body("Erreur : le nom n'a pas ete renseigne");
+		}
 	}
 
 	// GET : clients/uuid ------- Recuperation d'un client
