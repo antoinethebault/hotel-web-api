@@ -1,5 +1,6 @@
 package dev.hotel.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -11,5 +12,5 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
 
 	Optional<Client> findByUuid(UUID uuid);
 
-	Optional<Client> findByNom(String string);
+	List<Client> findByNom(String string);
 }

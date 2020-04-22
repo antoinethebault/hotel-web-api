@@ -48,11 +48,12 @@ public class ClientsController {
 	@RequestMapping(value = "/client")
 	public ResponseEntity<Object> client(@RequestParam Optional<String> nom) {
 		if (nom.isPresent()) {
-			Optional<Client> client = clientRepository.findByNom(nom.get());
-			if (client.isPresent())
-				return ResponseEntity.status(200).body(client.get());
-			else
+			List<Client> clients = clientRepository.findByNom(nom.get());
+			if (clients.isEmpty())
 				return ResponseEntity.status(404).body("Erreur : le nom n'a pas ete trouve");
+			else
+				return ResponseEntity.status(200).body(clients);
+
 		} else {
 			return ResponseEntity.status(400).body("Erreur : le nom n'a pas ete renseigne");
 		}
